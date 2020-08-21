@@ -1,13 +1,12 @@
 package main
 
 import (
+	"github.com/llgcode/draw2d/draw2dimg"
+	"github.com/llgcode/draw2d/draw2dkit"
 	"image"
 	"image/color"
 	"image/draw"
 	"math"
-
-	"github.com/llgcode/draw2d/draw2dimg"
-	"github.com/llgcode/draw2d/draw2dkit"
 
 	"github.com/status-im/avatars/colours"
 )
@@ -23,6 +22,12 @@ var (
 )
 
 func main() {
+	exampleSkin()
+	exampleHair()
+	exampleEyes()
+}
+
+func randomExamples() {
 	rgba := image.NewRGBA(image.Rectangle{Min: upLeft, Max: lowRight.Mul(8)})
 
 	for i := 0; i < 8; i++ {
@@ -44,7 +49,105 @@ func main() {
 		}
 	}
 
-	draw2dimg.SaveToPngFile("avatars.png", rgba)
+	draw2dimg.SaveToPngFile("examples/avatars.png", rgba)
+}
+
+func exampleSkin() {
+	nLowRight := lowRight
+	nLowRight.X = nLowRight.X * len(colours.Skin)
+	rgba := image.NewRGBA(image.Rectangle{Min: upLeft, Max: nLowRight})
+
+	for i, s := range colours.Skin {
+		img := image.NewRGBA(image.Rectangle{Min: upLeft, Max: lowRight})
+
+		drawAvatar(img, s, colours.Hair[0], colours.Black)
+
+		minP := image.Point{X: upLeft.X + (i)*width, Y: upLeft.Y}
+		maxP := image.Point{X: lowRight.X + (i)*width, Y: lowRight.Y}
+		rect := image.Rectangle{Min: minP, Max: maxP}
+
+		draw.Draw(rgba, rect, img, image.Point{0, 0}, draw.Src)
+	}
+
+	draw2dimg.SaveToPngFile("examples/skins.png", rgba)
+}
+
+// TODO do this better.
+func exampleHair() {
+	nLowRight := lowRight
+	nLowRight.X = nLowRight.X * len(colours.Hair) / 4
+	nLowRight.Y = nLowRight.Y * len(colours.Hair) / 5
+	rgba := image.NewRGBA(image.Rectangle{Min: upLeft, Max: nLowRight})
+
+	for i, h := range colours.Hair[0:5] {
+		img := image.NewRGBA(image.Rectangle{Min: upLeft, Max: lowRight})
+
+		drawAvatar(img, colours.Skin[0], h, colours.Black)
+
+		minP := image.Point{X: upLeft.X + (i)*width, Y: upLeft.Y}
+		maxP := image.Point{X: lowRight.X + (i)*width, Y: lowRight.Y}
+		rect := image.Rectangle{Min: minP, Max: maxP}
+
+		draw.Draw(rgba, rect, img, image.Point{0, 0}, draw.Src)
+	}
+
+	for i, h := range colours.Hair[5:10] {
+		img := image.NewRGBA(image.Rectangle{Min: upLeft, Max: lowRight})
+
+		drawAvatar(img, colours.Skin[0], h, colours.Black)
+
+		minP := image.Point{X: upLeft.X + (i)*width, Y: upLeft.Y+1*height}
+		maxP := image.Point{X: lowRight.X + (i)*width, Y: lowRight.Y+1*height}
+		rect := image.Rectangle{Min: minP, Max: maxP}
+
+		draw.Draw(rgba, rect, img, image.Point{0, 0}, draw.Src)
+	}
+
+	for i, h := range colours.Hair[10:15] {
+		img := image.NewRGBA(image.Rectangle{Min: upLeft, Max: lowRight})
+
+		drawAvatar(img, colours.Skin[0], h, colours.Black)
+
+		minP := image.Point{X: upLeft.X + (i)*width, Y: upLeft.Y+2*height}
+		maxP := image.Point{X: lowRight.X + (i)*width, Y: lowRight.Y+2*height}
+		rect := image.Rectangle{Min: minP, Max: maxP}
+
+		draw.Draw(rgba, rect, img, image.Point{0, 0}, draw.Src)
+	}
+
+	for i, h := range colours.Hair[15:20] {
+		img := image.NewRGBA(image.Rectangle{Min: upLeft, Max: lowRight})
+
+		drawAvatar(img, colours.Skin[0], h, colours.Black)
+
+		minP := image.Point{X: upLeft.X + (i)*width, Y: upLeft.Y+3*height}
+		maxP := image.Point{X: lowRight.X + (i)*width, Y: lowRight.Y+3*height}
+		rect := image.Rectangle{Min: minP, Max: maxP}
+
+		draw.Draw(rgba, rect, img, image.Point{0, 0}, draw.Src)
+	}
+
+	draw2dimg.SaveToPngFile("examples/hair.png", rgba)
+}
+
+func exampleEyes() {
+	nLowRight := lowRight
+	nLowRight.X = nLowRight.X * len(colours.Eye)
+	rgba := image.NewRGBA(image.Rectangle{Min: upLeft, Max: nLowRight})
+
+	for i, e := range colours.Eye {
+		img := image.NewRGBA(image.Rectangle{Min: upLeft, Max: lowRight})
+
+		drawAvatar(img, colours.Skin[0], colours.Black, e)
+
+		minP := image.Point{X: upLeft.X + (i)*width, Y: upLeft.Y}
+		maxP := image.Point{X: lowRight.X + (i)*width, Y: lowRight.Y}
+		rect := image.Rectangle{Min: minP, Max: maxP}
+
+		draw.Draw(rgba, rect, img, image.Point{0, 0}, draw.Src)
+	}
+
+	draw2dimg.SaveToPngFile("examples/eyes.png", rgba)
 }
 
 func drawAvatar(img draw.Image, skinColour, hairColour, eyeColour color.Color) {
