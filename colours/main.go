@@ -14,17 +14,17 @@ var (
 
 	// SKIN COLOURS
 	//#FFC83D
-	SkinEmojiYellow = color.RGBA{255, 200, 61, 0xff}
+	SkinEmojiYellow = color.RGBA{R: 255, G: 200, B: 61, A: 0xff}
 	//#F7D7C4
-	SkinLight = color.RGBA{247, 215, 196, 0xff}
+	SkinLight = color.RGBA{R: 247, G: 215, B: 196, A: 0xff}
 	//#D8B094
-	SkinMediumLight = color.RGBA{216, 176, 148, 0xff}
+	SkinMediumLight = color.RGBA{R: 216, G: 176, B: 148, A: 0xff}
 	//#BB9167
-	SkinMedium = color.RGBA{187, 145, 103, 0xff}
+	SkinMedium = color.RGBA{R: 187, G: 145, B: 103, A: 0xff}
 	//#8E562E
-	SkinMediumDark = color.RGBA{142, 86, 46, 0xff}
+	SkinMediumDark = color.RGBA{R: 142, G: 86, B: 46, A: 0xff}
 	//#613D30
-	SkinDark = color.RGBA{97, 61, 48, 0xff}
+	SkinDark = color.RGBA{R: 97, G: 61, B: 48, A: 0xff}
 
 	Skin = []color.Color{
 		SkinEmojiYellow,

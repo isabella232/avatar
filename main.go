@@ -45,7 +45,7 @@ func randomExamples() {
 			maxP := image.Point{X: lowRight.X + (i)*width, Y: lowRight.Y + (j)*height}
 			rect := image.Rectangle{Min: minP, Max: maxP}
 
-			draw.Draw(rgba, rect, img, image.Point{0, 0}, draw.Src)
+			draw.Draw(rgba, rect, img, image.Point{X: 0, Y: 0}, draw.Src)
 		}
 	}
 
@@ -66,7 +66,7 @@ func exampleSkin() {
 		maxP := image.Point{X: lowRight.X + (i)*width, Y: lowRight.Y}
 		rect := image.Rectangle{Min: minP, Max: maxP}
 
-		draw.Draw(rgba, rect, img, image.Point{0, 0}, draw.Src)
+		draw.Draw(rgba, rect, img, image.Point{X: 0, Y: 0}, draw.Src)
 	}
 
 	draw2dimg.SaveToPngFile("examples/skins.png", rgba)
@@ -77,7 +77,7 @@ func exampleHair() {
 
 	nLowRight := lowRight
 	nLowRight.X = nLowRight.X * len(colours.Hair) / len(colours.Hair) * avatarsPerRow
-	nLowRight.Y = nLowRight.Y * int(math.Ceil(float64(len(colours.Hair)) / float64(avatarsPerRow)))
+	nLowRight.Y = nLowRight.Y * int(math.Ceil(float64(len(colours.Hair))/float64(avatarsPerRow)))
 	rgba := image.NewRGBA(image.Rectangle{Min: upLeft, Max: nLowRight})
 
 	for i, h := range colours.Hair {
@@ -85,11 +85,11 @@ func exampleHair() {
 
 		drawAvatar(img, colours.Skin[0], h, colours.Black)
 
-		minP := image.Point{X: upLeft.X + (i % 5)*width, Y: upLeft.Y + (i % len(colours.Hair) / avatarsPerRow)* height}
-		maxP := image.Point{X: lowRight.X + (i % 5)*width, Y: lowRight.Y + (i % len(colours.Hair) / avatarsPerRow) * height}
+		minP := image.Point{X: upLeft.X + (i%5)*width, Y: upLeft.Y + (i%len(colours.Hair)/avatarsPerRow)*height}
+		maxP := image.Point{X: lowRight.X + (i%5)*width, Y: lowRight.Y + (i%len(colours.Hair)/avatarsPerRow)*height}
 		rect := image.Rectangle{Min: minP, Max: maxP}
 
-		draw.Draw(rgba, rect, img, image.Point{0, 0}, draw.Src)
+		draw.Draw(rgba, rect, img, image.Point{X: 0, Y: 0}, draw.Src)
 	}
 
 	draw2dimg.SaveToPngFile("examples/hair.png", rgba)
@@ -109,7 +109,7 @@ func exampleEyes() {
 		maxP := image.Point{X: lowRight.X + (i)*width, Y: lowRight.Y}
 		rect := image.Rectangle{Min: minP, Max: maxP}
 
-		draw.Draw(rgba, rect, img, image.Point{0, 0}, draw.Src)
+		draw.Draw(rgba, rect, img, image.Point{X: 0, Y: 0}, draw.Src)
 	}
 
 	draw2dimg.SaveToPngFile("examples/eyes.png", rgba)
