@@ -73,9 +73,11 @@ func exampleSkin() {
 }
 
 func exampleHair() {
+	avatarsPerRow := 5
+
 	nLowRight := lowRight
-	nLowRight.X = nLowRight.X * len(colours.Hair) / len(colours.Hair) * 5
-	nLowRight.Y = nLowRight.Y * len(colours.Hair) / 5
+	nLowRight.X = nLowRight.X * len(colours.Hair) / len(colours.Hair) * avatarsPerRow
+	nLowRight.Y = nLowRight.Y * int(math.Ceil(float64(len(colours.Hair)) / float64(avatarsPerRow)))
 	rgba := image.NewRGBA(image.Rectangle{Min: upLeft, Max: nLowRight})
 
 	for i, h := range colours.Hair {
@@ -83,8 +85,8 @@ func exampleHair() {
 
 		drawAvatar(img, colours.Skin[0], h, colours.Black)
 
-		minP := image.Point{X: upLeft.X + (i % 5)*width, Y: upLeft.Y + (i % len(colours.Hair) / 5)* height}
-		maxP := image.Point{X: lowRight.X + (i % 5)*width, Y: lowRight.Y + (i % len(colours.Hair) / 5) * height}
+		minP := image.Point{X: upLeft.X + (i % 5)*width, Y: upLeft.Y + (i % len(colours.Hair) / avatarsPerRow)* height}
+		maxP := image.Point{X: lowRight.X + (i % 5)*width, Y: lowRight.Y + (i % len(colours.Hair) / avatarsPerRow) * height}
 		rect := image.Rectangle{Min: minP, Max: maxP}
 
 		draw.Draw(rgba, rect, img, image.Point{0, 0}, draw.Src)
