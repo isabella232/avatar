@@ -72,56 +72,19 @@ func exampleSkin() {
 	draw2dimg.SaveToPngFile("examples/skins.png", rgba)
 }
 
-// TODO do this better.
 func exampleHair() {
 	nLowRight := lowRight
-	nLowRight.X = nLowRight.X * len(colours.Hair) / 4
+	nLowRight.X = nLowRight.X * len(colours.Hair) / len(colours.Hair) * 5
 	nLowRight.Y = nLowRight.Y * len(colours.Hair) / 5
 	rgba := image.NewRGBA(image.Rectangle{Min: upLeft, Max: nLowRight})
 
-	for i, h := range colours.Hair[0:5] {
+	for i, h := range colours.Hair {
 		img := image.NewRGBA(image.Rectangle{Min: upLeft, Max: lowRight})
 
 		drawAvatar(img, colours.Skin[0], h, colours.Black)
 
-		minP := image.Point{X: upLeft.X + (i)*width, Y: upLeft.Y}
-		maxP := image.Point{X: lowRight.X + (i)*width, Y: lowRight.Y}
-		rect := image.Rectangle{Min: minP, Max: maxP}
-
-		draw.Draw(rgba, rect, img, image.Point{0, 0}, draw.Src)
-	}
-
-	for i, h := range colours.Hair[5:10] {
-		img := image.NewRGBA(image.Rectangle{Min: upLeft, Max: lowRight})
-
-		drawAvatar(img, colours.Skin[0], h, colours.Black)
-
-		minP := image.Point{X: upLeft.X + (i)*width, Y: upLeft.Y+1*height}
-		maxP := image.Point{X: lowRight.X + (i)*width, Y: lowRight.Y+1*height}
-		rect := image.Rectangle{Min: minP, Max: maxP}
-
-		draw.Draw(rgba, rect, img, image.Point{0, 0}, draw.Src)
-	}
-
-	for i, h := range colours.Hair[10:15] {
-		img := image.NewRGBA(image.Rectangle{Min: upLeft, Max: lowRight})
-
-		drawAvatar(img, colours.Skin[0], h, colours.Black)
-
-		minP := image.Point{X: upLeft.X + (i)*width, Y: upLeft.Y+2*height}
-		maxP := image.Point{X: lowRight.X + (i)*width, Y: lowRight.Y+2*height}
-		rect := image.Rectangle{Min: minP, Max: maxP}
-
-		draw.Draw(rgba, rect, img, image.Point{0, 0}, draw.Src)
-	}
-
-	for i, h := range colours.Hair[15:20] {
-		img := image.NewRGBA(image.Rectangle{Min: upLeft, Max: lowRight})
-
-		drawAvatar(img, colours.Skin[0], h, colours.Black)
-
-		minP := image.Point{X: upLeft.X + (i)*width, Y: upLeft.Y+3*height}
-		maxP := image.Point{X: lowRight.X + (i)*width, Y: lowRight.Y+3*height}
+		minP := image.Point{X: upLeft.X + (i % 5)*width, Y: upLeft.Y + (i % len(colours.Hair) / 5)* height}
+		maxP := image.Point{X: lowRight.X + (i % 5)*width, Y: lowRight.Y + (i % len(colours.Hair) / 5) * height}
 		rect := image.Rectangle{Min: minP, Max: maxP}
 
 		draw.Draw(rgba, rect, img, image.Point{0, 0}, draw.Src)
