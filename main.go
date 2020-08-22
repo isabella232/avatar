@@ -1,24 +1,23 @@
 package main
 
 import (
-	"github.com/llgcode/draw2d/draw2dimg"
-	"github.com/llgcode/draw2d/draw2dkit"
 	"image"
 	"image/color"
 	"image/draw"
 	"math"
+	"math/rand"
+
+	"github.com/llgcode/draw2d/draw2dimg"
+	"github.com/llgcode/draw2d/draw2dkit"
 
 	"github.com/status-im/avatars/colours"
-)
-
-const (
-	width  = 256
-	height = 256
+	"github.com/status-im/avatars/dimentions"
+	"github.com/status-im/avatars/hair"
 )
 
 var (
 	upLeft   = image.Point{X: 0, Y: 0}
-	lowRight = image.Point{X: width, Y: height}
+	lowRight = image.Point{X: dimentions.Width, Y: dimentions.Height}
 )
 
 func main() {
@@ -39,10 +38,11 @@ func randomExamples() {
 				colours.Rand(colours.Skin),
 				colours.Rand(colours.Hair),
 				colours.Rand(colours.Eye),
+				hair.Styles[rand.Intn(len(hair.Styles))],
 			)
 
-			minP := image.Point{X: upLeft.X + (i)*width, Y: upLeft.Y + (j)*height}
-			maxP := image.Point{X: lowRight.X + (i)*width, Y: lowRight.Y + (j)*height}
+			minP := image.Point{X: upLeft.X + (i)*dimentions.Width, Y: upLeft.Y + (j)*dimentions.Height}
+			maxP := image.Point{X: lowRight.X + (i)*dimentions.Width, Y: lowRight.Y + (j)*dimentions.Height}
 			rect := image.Rectangle{Min: minP, Max: maxP}
 
 			draw.Draw(rgba, rect, img, image.Point{X: 0, Y: 0}, draw.Src)
@@ -60,10 +60,10 @@ func exampleSkin() {
 	for i, s := range colours.Skin {
 		img := image.NewRGBA(image.Rectangle{Min: upLeft, Max: lowRight})
 
-		drawAvatar(img, s, colours.Hair[0], colours.Black)
+		drawAvatar(img, s, colours.Hair[0], colours.Black, hair.Styles[1])
 
-		minP := image.Point{X: upLeft.X + (i)*width, Y: upLeft.Y}
-		maxP := image.Point{X: lowRight.X + (i)*width, Y: lowRight.Y}
+		minP := image.Point{X: upLeft.X + (i)*dimentions.Width, Y: upLeft.Y}
+		maxP := image.Point{X: lowRight.X + (i)*dimentions.Width, Y: lowRight.Y}
 		rect := image.Rectangle{Min: minP, Max: maxP}
 
 		draw.Draw(rgba, rect, img, image.Point{X: 0, Y: 0}, draw.Src)
@@ -83,10 +83,10 @@ func exampleHair() {
 	for i, h := range colours.Hair {
 		img := image.NewRGBA(image.Rectangle{Min: upLeft, Max: lowRight})
 
-		drawAvatar(img, colours.Skin[0], h, colours.Black)
+		drawAvatar(img, colours.Skin[0], h, colours.Black, hair.Styles[1])
 
-		minP := image.Point{X: upLeft.X + (i%5)*width, Y: upLeft.Y + (i%len(colours.Hair)/avatarsPerRow)*height}
-		maxP := image.Point{X: lowRight.X + (i%5)*width, Y: lowRight.Y + (i%len(colours.Hair)/avatarsPerRow)*height}
+		minP := image.Point{X: upLeft.X + (i%5)*dimentions.Width, Y: upLeft.Y + (i%len(colours.Hair)/avatarsPerRow)*dimentions.Height}
+		maxP := image.Point{X: lowRight.X + (i%5)*dimentions.Width, Y: lowRight.Y + (i%len(colours.Hair)/avatarsPerRow)*dimentions.Height}
 		rect := image.Rectangle{Min: minP, Max: maxP}
 
 		draw.Draw(rgba, rect, img, image.Point{X: 0, Y: 0}, draw.Src)
@@ -103,10 +103,10 @@ func exampleEyes() {
 	for i, e := range colours.Eye {
 		img := image.NewRGBA(image.Rectangle{Min: upLeft, Max: lowRight})
 
-		drawAvatar(img, colours.Skin[0], colours.Black, e)
+		drawAvatar(img, colours.Skin[0], colours.Black, e, hair.Styles[1])
 
-		minP := image.Point{X: upLeft.X + (i)*width, Y: upLeft.Y}
-		maxP := image.Point{X: lowRight.X + (i)*width, Y: lowRight.Y}
+		minP := image.Point{X: upLeft.X + (i)*dimentions.Width, Y: upLeft.Y}
+		maxP := image.Point{X: lowRight.X + (i)*dimentions.Width, Y: lowRight.Y}
 		rect := image.Rectangle{Min: minP, Max: maxP}
 
 		draw.Draw(rgba, rect, img, image.Point{X: 0, Y: 0}, draw.Src)
@@ -115,11 +115,11 @@ func exampleEyes() {
 	draw2dimg.SaveToPngFile("examples/eyes.png", rgba)
 }
 
-func drawAvatar(img draw.Image, skinColour, hairColour, eyeColour color.Color) {
+func drawAvatar(img draw.Image, skinColour, hairColour, eyeColour color.Color, hairStyle hair.StyleHandler) {
 	gc := draw2dimg.NewGraphicContext(img)
 
 	drawFace(gc, skinColour)
-	drawHair(gc, hairColour)
+	drawHair(gc, hairColour, hairStyle)
 	drawEyes(gc, eyeColour)
 	drawMouth(gc)
 }
@@ -129,36 +129,27 @@ func drawFace(gc *draw2dimg.GraphicContext, c color.Color) {
 	gc.SetStrokeColor(c)
 	gc.SetLineWidth(1)
 
-	draw2dkit.Circle(gc, float64(width/2), float64(height/2), float64(width)/100*75/2)
+	draw2dkit.Circle(gc, float64(dimentions.Width/2), float64(dimentions.Height/2), float64(dimentions.Width)/100*75/2)
 	gc.FillStroke()
 }
 
-func drawHair(gc *draw2dimg.GraphicContext, c color.Color) {
-
-	hairPos := [4]float64{
-		float64(width)/2 - float64(width)/100*10,
-		float64(height) / 100 * 5,
-		float64(width)/2 + float64(width)/100*10,
-		float64(height) / 100 * 20,
-	}
-
+func drawHair(gc *draw2dimg.GraphicContext, c color.Color, s hair.StyleHandler) {
 	gc.SetFillColor(c)
 	gc.SetStrokeColor(c)
 	gc.SetLineWidth(1)
 
-	draw2dkit.Rectangle(gc, hairPos[0], hairPos[1], hairPos[2], hairPos[3])
-	gc.FillStroke()
+	s(gc)
 }
 
 func drawEyes(gc *draw2dimg.GraphicContext, c color.Color) {
-	eyeSize := float64(width) / 100 * 11
+	eyeSize := float64(dimentions.Width) / 100 * 11
 	irisSize := eyeSize / 100 * 75
 	pupilSize := irisSize / 100 * 45
 
-	leftEyePos := [2]float64{float64(width/2 - width/7), float64(height/2 - height/8)}
-	rightEyePos := [2]float64{float64(width/2 + width/7), float64(height/2 - height/8)}
-	irisOffset := float64(width) / 100 * 1
-	pupilOffset := float64(width) / 100 * 2
+	leftEyePos := [2]float64{float64(dimentions.Width/2 - dimentions.Width/7), float64(dimentions.Height/2 - dimentions.Height/8)}
+	rightEyePos := [2]float64{float64(dimentions.Width/2 + dimentions.Width/7), float64(dimentions.Height/2 - dimentions.Height/8)}
+	irisOffset := float64(dimentions.Width) / 100 * 1
+	pupilOffset := float64(dimentions.Width) / 100 * 2
 
 	// Draw whites
 	gc.SetFillColor(colours.White)
