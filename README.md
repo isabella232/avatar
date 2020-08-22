@@ -12,6 +12,10 @@
 
 ![](examples/hair.png)
 
+### Hair Styles
+
+![](examples/hair_styles.png)
+
 ### Eye colours
 
 ![](examples/eyes.png)

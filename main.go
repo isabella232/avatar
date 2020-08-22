@@ -22,7 +22,8 @@ var (
 
 func main() {
 	exampleSkin()
-	exampleHair()
+	exampleHairColour()
+	exampleHairStyles()
 	exampleEyes()
 }
 
@@ -72,7 +73,7 @@ func exampleSkin() {
 	draw2dimg.SaveToPngFile("examples/skins.png", rgba)
 }
 
-func exampleHair() {
+func exampleHairColour() {
 	avatarsPerRow := 5
 
 	nLowRight := lowRight
@@ -93,6 +94,26 @@ func exampleHair() {
 	}
 
 	draw2dimg.SaveToPngFile("examples/hair.png", rgba)
+}
+
+func exampleHairStyles() {
+	nLowRight := lowRight
+	nLowRight.X = nLowRight.X * len(hair.Styles)
+	rgba := image.NewRGBA(image.Rectangle{Min: upLeft, Max: nLowRight})
+
+	for i, s := range hair.Styles {
+		img := image.NewRGBA(image.Rectangle{Min: upLeft, Max: lowRight})
+
+		drawAvatar(img, colours.Skin[0], colours.Black, colours.Black, s)
+
+		minP := image.Point{X: upLeft.X + (i)*dimentions.Width, Y: upLeft.Y}
+		maxP := image.Point{X: lowRight.X + (i)*dimentions.Width, Y: lowRight.Y}
+		rect := image.Rectangle{Min: minP, Max: maxP}
+
+		draw.Draw(rgba, rect, img, image.Point{X: 0, Y: 0}, draw.Src)
+	}
+
+	draw2dimg.SaveToPngFile("examples/hair_styles.png", rgba)
 }
 
 func exampleEyes() {
